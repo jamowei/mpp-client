@@ -1,0 +1,18 @@
+### Save Person
+
+POST http://localhost:8080/api/person
+Content-Type: application/json
+
+{
+  "name": "Peter",
+  "age": 45,
+  "mail": "peter@schwarz.de",
+  "height": 1.85
+}
+
+### Get Person
+
+GET http://localhost:8080/api/person/Peter
+Accept: application/json
+
+<> 2022-10-18T163155.200.json
