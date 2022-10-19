@@ -1,6 +1,7 @@
+package com.github.jamowei.person.client
+
 import com.github.jamowei.common.client.Protocol
 import com.github.jamowei.common.client.Severity
-import com.github.jamowei.person.client.PersonClient
 import com.github.jamowei.person.model.Person
 import io.ktor.client.request.*
 import io.ktor.http.*
