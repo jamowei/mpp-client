@@ -11,13 +11,17 @@ kotlin {
         compilations.all {
             kotlinOptions.jvmTarget = "11"
         }
-        withJava()
         testRuns["test"].executionTask.configure {
             useJUnitPlatform()
+            dependsOn(":server:startServer")
         }
     }
     js(IR) {
-        browser()
+        browser {
+            testRuns["test"].executionTask {
+                dependsOn(":server:startServer")
+            }
+        }
     }.binaries.executable()
 
     sourceSets {
@@ -33,16 +37,18 @@ kotlin {
         val jvmMain by getting {
             dependencies {
                 implementation("io.ktor:ktor-client-java:$ktorVersion")
-            }
-        }
-        val jvmTest by getting {
-            dependencies {
-                implementation(kotlin("test"))
+                implementation(kotlin("reflect"))
             }
         }
         val jsMain by getting {
             dependencies {
                 implementation("io.ktor:ktor-client-js:$ktorVersion")
+            }
+        }
+
+        val jvmTest by getting {
+            dependencies {
+                implementation(kotlin("test"))
             }
         }
         val jsTest by getting {
