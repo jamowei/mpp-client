@@ -1,4 +1,5 @@
 # Kotlin Multiplatform HTTP-Client using Ktor
+[![build](https://github.com/jamowei/mpp-client/actions/workflows/build.yml/badge.svg)](https://github.com/jamowei/mpp-client/actions/workflows/build.yml)
 
 Simple demonstration of a [Ktor](https://ktor.io/)-based multiplatform HTTP-client in Kotlin
 
