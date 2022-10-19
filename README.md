@@ -10,7 +10,6 @@ Simple demonstration of a [Ktor](https://ktor.io/)-based multiplatform HTTP-clie
 
 ## How to run
 
-1. run the server with: `./gradlew run`
-2. start the test-cases for jvm and js platform with: `./gradlew check`
-3. all tests should be succeeded
-4. play around with it
+1. start the test-cases for jvm and js platform with: `./gradlew check`
+2. all tests should be succeeded
+3. play around with it
