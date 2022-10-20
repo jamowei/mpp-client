@@ -9,14 +9,14 @@ import io.ktor.http.*
 import io.ktor.serialization.kotlinx.json.*
 import kotlinx.serialization.json.Json
 
-abstract class ClientBase {
+abstract class ClientDefinition {
     abstract val protocol: Protocol
     abstract val host: String
     abstract val port: Int
 
     protected abstract val client: HttpClient
 
-    protected open val requestConfig: HttpMessageBuilder.() -> Unit = {
+    protected open val defaultHttpConfig: HttpMessageBuilder.() -> Unit = {
         contentType(ContentType.Application.Json)
     }
 
