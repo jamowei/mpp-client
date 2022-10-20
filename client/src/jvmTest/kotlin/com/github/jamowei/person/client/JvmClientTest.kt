@@ -3,7 +3,6 @@ package com.github.jamowei.person.client
 import com.github.jamowei.common.client.Protocol
 import com.github.jamowei.common.client.Severity
 import com.github.jamowei.person.model.Person
-import io.ktor.client.request.*
 import io.ktor.http.*
 import kotlinx.coroutines.runBlocking
 import org.junit.jupiter.api.Test
@@ -11,24 +10,20 @@ import kotlin.test.assertEquals
 
 class JvmClientTest {
 
-    private val headerValue = "Hello World!"
-    private val client = PersonClient(Protocol.HTTP, "localhost", 3000) {
-        headers {
-            set("Custom-Header", headerValue)
-        }
-    }
+    private val personClient = PersonClient(Protocol.HTTP, "localhost", 3000)
+    private val headerClient = HeaderClient(Protocol.HTTP, "localhost", 3000)
     private val person = Person("Peter", 45, "peter@schwarz.de", 1.85)
 
     @Test
     fun testSaveAndLoad() {
         runBlocking {
-            val save = client.save(person)
+            val save = personClient.save(person)
             println(save.message)
             assertEquals(HttpStatusCode.OK, save.statusCode)
             assertEquals(Severity.Info, save.severity)
             assertEquals(person, save.content)
 
-            val load = client.load(person.name)
+            val load = personClient.load(person.name)
             println(load.message)
             assertEquals(HttpStatusCode.OK, load.statusCode)
             assertEquals(Severity.Info, load.severity)
@@ -39,7 +34,7 @@ class JvmClientTest {
     @Test
     fun testLoadNotFound() {
         runBlocking {
-            val response = client.load("foo")
+            val response = personClient.load("foo")
             println(response.message)
             assertEquals(HttpStatusCode.NotFound, response.statusCode)
             assertEquals(Severity.Error, response.severity)
@@ -50,7 +45,8 @@ class JvmClientTest {
     @Test
     fun testCustomHeader() {
         runBlocking {
-            val response = client.customHeader()
+            val headerValue = "Hello World!"
+            val response = headerClient.customHeader(headerValue)
             println(response.message)
             assertEquals(HttpStatusCode.OK, response.statusCode)
             assertEquals(Severity.Info, response.severity)
