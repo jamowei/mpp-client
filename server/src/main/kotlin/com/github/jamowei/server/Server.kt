@@ -63,6 +63,9 @@ fun main() {
                         ServiceResponse<Unit>(Severity.Error, "No custom header in request")
                     )
                 }
+                get("/no-service-response") {
+                    call.respond("Hello World!")
+                }
             }
         }
     }.start(wait = true)

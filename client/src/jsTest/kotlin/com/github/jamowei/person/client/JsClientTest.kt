@@ -1,5 +1,7 @@
 package com.github.jamowei.person.client
 
+import com.github.jamowei.common.client.NoServiceResponseException
+import com.github.jamowei.common.client.NotFoundException
 import com.github.jamowei.common.client.Protocol
 import com.github.jamowei.common.client.Severity
 import com.github.jamowei.person.model.Person
@@ -10,11 +12,14 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.promise
 import kotlin.test.Test
 import kotlin.test.assertEquals
+import kotlin.test.assertFails
+import kotlin.test.assertFailsWith
 
 class JsClientTest {
 
     private val personClient = PersonClient(Protocol.HTTP, "localhost", 3000)
     private val headerClient = HeaderClient(Protocol.HTTP, "localhost", 3000)
+    private val failureClient = FailureClient(Protocol.HTTP, "localhost", 3000)
 
     private val person = Person("Hans", 45, "peter@schwarz.de", 1.85)
 
@@ -50,6 +55,28 @@ class JsClientTest {
         assertEquals(HttpStatusCode.OK, response.statusCode)
         assertEquals(Severity.Info, response.severity)
         assertEquals(headerValue, response.content)
+    }
+
+    @Test
+    fun testNoServiceResponseException() = runTest {
+        assertFailsWith(NoServiceResponseException::class) {
+            failureClient.noServiceResponse()
+        }
+    }
+
+    @Test
+    fun testNotFoundException() = runTest {
+        assertFailsWith(NotFoundException::class) {
+            failureClient.noConnection()
+        }
+    }
+
+    @Test
+    fun testNoConnection() = runTest {
+        assertFails {
+            val client = object : FailureClient(Protocol.HTTP, "localhost", 3333) {}
+            client.noConnection()
+        }
     }
 }
 

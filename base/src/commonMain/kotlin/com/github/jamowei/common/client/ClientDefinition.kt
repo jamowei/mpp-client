@@ -24,16 +24,15 @@ abstract class ClientDefinition {
         install(ContentNegotiation) { json(Json) }
     }
 
+    val origin: String get() = "${protocol.name.lowercase()}://$host:$port"
 
     suspend inline fun <reified T : Any> HttpClient.perform(block: HttpClient.() -> HttpResponse): ClientResponse<T> =
-        runCatching { block().toClientResponse<T>() }.getOrElse {
-            when (it) {
-                is ResponseException -> it.toClientResponse<T>()
-                else -> throw it
+        runCatching { block().toClientResponse<T>() }.getOrElse { cause ->
+            when (cause) {
+                is ResponseException -> cause.toClientResponse()
+                else -> throw cause
             }
         }
-
-    val origin: String get() = "${protocol.name.lowercase()}://$host:$port"
 
     override fun toString(): String = "HttpClient ($origin)"
 }

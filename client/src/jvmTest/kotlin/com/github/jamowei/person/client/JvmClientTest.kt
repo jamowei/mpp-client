@@ -1,17 +1,22 @@
 package com.github.jamowei.person.client
 
+import com.github.jamowei.common.client.NoServiceResponseException
+import com.github.jamowei.common.client.NotFoundException
 import com.github.jamowei.common.client.Protocol
 import com.github.jamowei.common.client.Severity
 import com.github.jamowei.person.model.Person
 import io.ktor.http.*
 import kotlinx.coroutines.runBlocking
 import org.junit.jupiter.api.Test
+import java.net.SocketException
 import kotlin.test.assertEquals
+import kotlin.test.assertFailsWith
 
 class JvmClientTest {
 
     private val personClient = PersonClient(Protocol.HTTP, "localhost", 3000)
     private val headerClient = HeaderClient(Protocol.HTTP, "localhost", 3000)
+    private val failureClient = FailureClient(Protocol.HTTP, "localhost", 3000)
     private val person = Person("Peter", 45, "peter@schwarz.de", 1.85)
 
     @Test
@@ -54,4 +59,31 @@ class JvmClientTest {
         }
     }
 
+    @Test
+    fun testNoServiceResponseException() {
+        runBlocking {
+            assertFailsWith(NoServiceResponseException::class) {
+                failureClient.noServiceResponse()
+            }
+        }
+    }
+
+    @Test
+    fun testNotFoundException() {
+        runBlocking {
+            assertFailsWith(NotFoundException::class) {
+                failureClient.noConnection()
+            }
+        }
+    }
+
+    @Test
+    fun testNoConnection() {
+        runBlocking {
+            assertFailsWith(SocketException::class) {
+                val client = object : FailureClient(Protocol.HTTP, "localhost", 3333) {}
+                client.noConnection()
+            }
+        }
+    }
 }
