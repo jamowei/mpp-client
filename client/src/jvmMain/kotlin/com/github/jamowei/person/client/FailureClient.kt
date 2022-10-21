@@ -4,10 +4,10 @@ import com.github.jamowei.common.client.Protocol
 import io.ktor.client.*
 import io.ktor.client.engine.java.*
 
-class HeaderClient(
+open class FailureClient(
     override val protocol: Protocol = Protocol.HTTP,
     override val host: String,
-    override val port: Int = 80
-) : HeaderClientDefinition() {
+    override val port: Int
+) : FailureClientDefinition() {
     override val client: HttpClient = HttpClient(Java, defaultClientConfig)
 }
